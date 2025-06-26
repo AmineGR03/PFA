@@ -1,0 +1,48 @@
+body {
+    background-color: #f5f6fa;
+}
+
+a.text-white:hover {
+    text-decoration: underline;
+}
+
+h1 a {
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+footer {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+/* Centre le contenu et ajoute un spacing vertical */
+.main-content {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+/* Style titre */
+.main-content h2 {
+    font-weight: 700;
+    color: #1E90FF; /* bleu vif comme sofascore */
+    margin-bottom: 1.5rem;
+}
+
+/* Style paragraphe */
+.main-content p {
+    font-size: 1.1rem;
+    color: #444;
+}
+/* Liens en hover avec soulignement et couleur sofascore */
+.list-group-item a:hover {
+  color: #1E90FF; /* bleu sofascore */
+  text-decoration: underline;
+}
+
+/* Liste avec un léger ombrage */
+.list-group {
+  box-shadow: 0 2px 6px rgba(30, 144, 255, 0.1);
+  border-radius: 6px;
+}

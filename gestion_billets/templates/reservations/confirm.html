@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmation de réservation{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 480px;">
+  <h2 class="mb-4 text-primary fw-bold text-center">Confirmer votre réservation</h2>
+  <p class="text-center mb-4">
+    Match : <strong>{{ match.equipe1.nom }}</strong> vs <strong>{{ match.equipe2.nom }}</strong><br>
+    <small class="text-muted">le {{ match.date }}</small>
+  </p>
+
+  <form method="post" class="d-flex flex-column gap-3">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="categorie" class="form-label">Catégorie :</label>
+      <select id="categorie" name="categorie" class="form-select" required>
+        <option value="VIP">VIP</option>
+        <option value="Standard">Standard</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="nb_billets" class="form-label">Nombre de billets :</label>
+      <input type="number" id="nb_billets" name="nb_billets" min="1" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Confirmer</button>
+  </form>
+</div>
+{% endblock %}

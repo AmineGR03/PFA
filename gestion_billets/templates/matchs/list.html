@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Matchs disponibles{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 text-center">
+      <h2 class="mb-4 text-primary fw-bold">Matchs disponibles</h2>
+    </div>
+  </div>
+
+  {% if matchs %}
+    <div class="row justify-content-center">
+      {% for match in matchs %}
+        <div class="col-md-6 col-lg-5 mb-4 d-flex align-items-stretch">
+          <div class="card shadow-sm w-100">
+            <div class="card-body text-center">
+              <h5 class="card-title text-dark">
+                {{ match.equipe1.nom }} <span class="text-muted">vs</span> {{ match.equipe2.nom }}
+              </h5>
+              <p class="card-text">
+                <strong>Date :</strong> {{ match.date }}<br>
+                <strong>Heure :</strong> {{ match.heure }}
+              </p>
+              <a href="{% url 'detail_match' match.id %}" class="btn btn-outline-primary btn-sm mt-2">
+                Voir les détails
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      Aucun match disponible pour le moment.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Réservations des matchs{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Réservations pour vos matchs</h4>
+    </div>
+    <div class="card-body">
+      {% if reservations %}
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Match</th>
+                <th>Spectateur</th>
+                <th>Date de réservation</th>
+                <th>Heure</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reservation in reservations %}
+                <tr>
+                  <td>{{ reservation.match }}</td>
+                  <td>{{ reservation.spectateur.username }}</td>
+                  <td>{{ reservation.date_reservation|date:"d/m/Y" }}</td>
+                  <td>{{ reservation.heure|time:"H:i" }}</td>
+                  <td>
+                    {% if reservation.statut == "payé" %}
+                      <span class="badge bg-success">Payé</span>
+                    {% else %}
+                      <span class="badge bg-warning text-dark">{{ reservation.statut }}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted">Aucune réservation trouvée.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

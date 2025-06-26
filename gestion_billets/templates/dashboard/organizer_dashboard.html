@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord - Organisateur{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Tableau de bord de l'organisateur</h2>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a href="{% url 'ajouter_match' %}" class="text-decoration-none text-primary fw-semibold">
+        Ajouter un match
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'mes_matchs' %}" class="text-decoration-none text-primary fw-semibold">
+        Gérer mes matchs
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'voir_reservations' %}" class="text-decoration-none text-primary fw-semibold">
+        Voir les réservations
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Paiement Stripe{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 600px;">
+  <h2 class="text-center mb-4 text-primary fw-bold">Procéder au paiement</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body text-center">
+      <p class="mb-3 fs-5">Montant à payer : 
+        <span class="fw-bold text-success">{{ reservation.montant }} DH</span>
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+          Payer avec Stripe
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord - Utilisateur{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Mon tableau de bord</h2>
+
+  <ul class="list-group mb-4">
+    <li class="list-group-item">
+      <a href="{% url 'historique_reservations' %}" class="text-decoration-none text-primary fw-semibold">
+        Mes réservations
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'liste_matchs' %}" class="text-decoration-none text-primary fw-semibold">
+        Voir les matchs
+      </a>
+    </li>
+  </ul>
+
+  <h3 class="mb-3">Mes réservations payées</h3>
+  {% if reservations_payees %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for reservation in reservations_payees %}
+        <div class="col">
+          <div class="card h-100 shadow-sm border-primary">
+            <div class="card-body">
+              <h5 class="card-title text-primary fw-bold">
+                {{ reservation.match.equipe1.nom }} vs {{ reservation.match.equipe2.nom }}
+              </h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ reservation.match.date|date:"d/m/Y" }}</h6>
+              <p class="card-text mb-1"><strong>Catégorie :</strong> {{ reservation.categorie }}</p>
+              <p class="card-text mb-1"><strong>Nombre de billets :</strong> {{ reservation.nb_billets }}</p>
+              <p class="card-text mb-1"><strong>Montant :</strong> {{ reservation.montant }} DH</p>
+              <span class="badge bg-success">Payée</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Aucune réservation payée pour le moment.</p>
+  {% endif %}
+</div>
+{% endblock %}

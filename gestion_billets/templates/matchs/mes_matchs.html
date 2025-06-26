@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Mes Matchs{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="text-primary fw-bold mb-4 text-center">Mes Matchs</h2>
+
+  {% if matchs %}
+    <div class="row justify-content-center">
+      {% for match in matchs %}
+        <div class="col-md-6 col-lg-5 mb-4 d-flex align-items-stretch">
+          <div class="card shadow-sm w-100">
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ match.equipe1.nom }} <span class="text-muted">vs</span> {{ match.equipe2.nom }}</h5>
+              <p class="card-text">
+                <strong>Date :</strong> {{ match.date }}<br>
+                <strong>Heure :</strong> {{ match.heure }}<br>
+                <strong>Lieu :</strong> {{ match.lieu }}
+              </p>
+           <a href="{% url 'detail_match' match.id %}" class="btn btn-outline-primary btn-sm mt-2">Détails</a>
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      Vous n'avez pas encore de matchs organisés.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

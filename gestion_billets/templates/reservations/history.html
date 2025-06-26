@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Historique des réservations{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Mes réservations</h2>
+
+  {% if reservations %}
+    <ul class="list-group">
+      {% for reservation in reservations %}
+        <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+          <div>
+            <strong>ID réservation:</strong> {{ reservation.id }} <br>
+            <strong>Match :</strong> {{ reservation.match.equipe1.nom }} vs {{ reservation.match.equipe2.nom }}<br>
+            <strong>Date :</strong> {{ reservation.match.date }}<br>
+            <strong>Catégorie :</strong> {{ reservation.categorie }}<br>
+            <strong>Nombre de billets :</strong> {{ reservation.nb_billets }}<br>
+            <strong>Statut :</strong> {{ reservation.statut }}<br>
+            <strong>Montant :</strong> {{ reservation.montant }} DH
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'reservation_detail' reservation.id %}" class="btn btn-sm btn-outline-primary">Voir</a>
+
+            {% if reservation.statut != "payée" %}
+              <a href="{% url 'reservation_modifier' reservation.id %}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+
+              <a href="{% url 'reservation_payer' reservation.id %}" class="btn btn-sm btn-primary">Payer</a>
+
+              <form action="{% url 'reservation_supprimer' reservation.id %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+              </form>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Vous n'avez aucune réservation.</p>
+  {% endif %}
+</div>
+{% endblock %}

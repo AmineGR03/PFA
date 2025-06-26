@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Détails du Match{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">{{ match.equipe1.nom }} <span class="mx-2">vs</span> {{ match.equipe2.nom }}</h2>
+    </div>
+    <div class="card-body">
+      <p><strong>Date :</strong> {{ match.date|date:"d/m/Y" }}</p>
+      <p><strong>Heure :</strong> {{ match.heure|time:"H:i" }}</p>
+      <p><strong>Lieu :</strong> {{ match.lieu }}</p>
+      <p><strong>Description :</strong> {{ match.description }}</p>
+      <p><strong>Places disponibles :</strong> {{ match.nbPlacesDispo }}</p>
+      <p><strong>Prix VIP :</strong> {{ match.prix_vip }} MAD</p>
+      <p><strong>Prix Standard :</strong> {{ match.prix_standard }} MAD</p>
+    </div>
+    <div class="card-footer text-center">
+      {% if is_organisateur %}
+        <div class="alert alert-info">
+          <strong>Vous êtes l'organisateur de ce match.</strong>
+        </div>
+        <a href="{% url 'modifier_match' match.id %}" class="btn btn-warning me-2">Modifier</a>
+        <a href="{% url 'supprimer_match' match.id %}" class="btn btn-danger">Supprimer</a>
+      {% else %}
+        <a href="{% url 'confirmer_reservation' match.id %}" class="btn btn-success">Réserver une place</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+
+  .container {
+    max-width: 700px;
+  }
+  .card p {
+    font-size: 1.1rem;
+  }
+</style>
+{% endblock %}

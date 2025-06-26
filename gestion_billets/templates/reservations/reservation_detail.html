@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de la réservation #{{ reservation.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Détails de la réservation #{{ reservation.id }}</h2>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <p><strong>Match :</strong> {{ reservation.match.equipe1.nom }} vs {{ reservation.match.equipe2.nom }}</p>
+      <p><strong>Date :</strong> {{ reservation.match.date }}</p>
+      <p><strong>Catégorie :</strong> {{ reservation.categorie }}</p>
+      <p><strong>Nombre de billets :</strong> {{ reservation.nb_billets }}</p>
+      <p><strong>Statut :</strong> {{ reservation.statut }}</p>
+      <p><strong>Montant :</strong> {{ reservation.montant }} DH</p>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <a href="{% url 'reservation_modifier' reservation.id %}" class="btn btn-outline-primary">
+      Modifier
+    </a>
+
+    <form action="{% url 'reservation_supprimer' reservation.id %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger">
+        Supprimer
+      </button>
+    </form>
+
+    {% if reservation.statut != "confirmée" %}
+      <a href="{% url 'reservation_payer' reservation.id %}" class="btn btn-primary">
+        Payer
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

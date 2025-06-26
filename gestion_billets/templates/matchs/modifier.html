@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier le match{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Modifier le match</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+        {% if field.errors %}
+          <div class="text-danger">
+            {{ field.errors }}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    <a href="{% url 'detail_match' match.id %}" class="btn btn-secondary ms-2">Annuler</a>
+  </form>
+</div>
+{% endblock %}

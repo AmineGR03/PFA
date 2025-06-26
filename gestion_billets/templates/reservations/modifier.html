@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier la réservation{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Modifier votre réservation</h2>
+
+  <form method="post" class="border p-4 rounded bg-white shadow-sm">
+    {% csrf_token %}
+    
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label fw-semibold">{{ field.label_tag }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="text-danger small">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{% url 'reservation_detail' reservation.id %}" class="btn btn-secondary ms-2">Annuler</a>
+  </form>
+</div>
+{% endblock %}
