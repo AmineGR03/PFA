@@ -23,7 +23,11 @@
           <strong>Vous êtes l'organisateur de ce match.</strong>
         </div>
         <a href="{% url 'modifier_match' match.id %}" class="btn btn-warning me-2">Modifier</a>
-        <a href="{% url 'supprimer_match' match.id %}" class="btn btn-danger">Supprimer</a>
+        <form action="{% url 'supprimer_match' match.id %}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce match ?');">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+</form>
+
       {% else %}
         <a href="{% url 'confirmer_reservation' match.id %}" class="btn btn-success">Réserver une place</a>
       {% endif %}

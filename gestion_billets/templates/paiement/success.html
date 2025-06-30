@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Paiement confirmé{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-body text-center">
+      <div class="mb-4">
+        <!-- Icône succès -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="#28a745" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.07 0l3.992-3.992a.75.75 0 1 0-1.06-1.06L7.5 9.439 5.573 7.512a.75.75 0 1 0-1.06 1.06l2.456 2.458z"/>
+        </svg>
+      </div>
+
+      <h2 class="text-success mb-3">Paiement confirmé !</h2>
+
+      <p class="lead">Merci pour votre réservation.</p>
+
+      <ul class="list-group list-group-flush text-start mb-4">
+        <li class="list-group-item"><strong>Numéro de réservation :</strong> {{ reservation.id }}</li>
+        <li class="list-group-item"><strong>Match :</strong> {{ reservation.match.equipe1.nom }} vs {{ reservation.match.equipe2.nom }}</li>
+        <li class="list-group-item"><strong>Date du match :</strong> {{ reservation.match.date }}</li>
+        <li class="list-group-item"><strong>Nombre de billets :</strong> {{ reservation.nb_billets }}</li>
+        <li class="list-group-item"><strong>Catégorie :</strong> {{ reservation.categorie }}</li>
+        <li class="list-group-item"><strong>Montant payé :</strong> {{ reservation.montant }} MAD</li>
+      </ul>
+
+      <a href="{% url 'user_dashboard' %}" class="btn btn-primary">Retour au tableau de bord</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

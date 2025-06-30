@@ -4,9 +4,26 @@
 
 {% block content %}
 <div class="container py-4">
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mb-4">
     <div class="col-lg-8 text-center">
       <h2 class="mb-4 text-primary fw-bold">Matchs disponibles</h2>
+    </div>
+  </div>
+
+  <!-- Formulaire de recherche -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-6">
+      <form method="get" class="d-flex" action="{% url 'liste_matchs' %}">
+        <input
+          type="text"
+          name="q"
+          value="{{ request.GET.q|default:'' }}"
+          class="form-control me-2"
+          placeholder="Rechercher par équipe..."
+          aria-label="Recherche"
+        >
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+      </form>
     </div>
   </div>
 

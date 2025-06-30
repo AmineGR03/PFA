@@ -1,27 +1,76 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <title>Billet pour {{ billet.match.titre }}</title>
+    <meta charset="UTF-8">
+    <title>Billet de Réservation</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .ticket {
-            border: 2px dashed #000;
-            padding: 20px;
-            width: 450px;
-            margin: auto;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 40px;
         }
-        h2 { text-align: center; }
-        p { font-size: 14px; margin: 5px 0; }
+
+        .ticket-container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            border: 2px solid #343a40;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .value {
+            margin-left: 5px;
+            color: #555555;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        hr {
+            border: 1px dashed #ccc;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-    <div class="ticket">
-        <h2>Billet de match</h2>
-        <p><strong>Match :</strong> {{ billet.match.titre }}</p>
-        <p><strong>Date :</strong> {{ billet.match.date|date:"d/m/Y" }}</p>
-        <p><strong>Réservé par :</strong> {{ billet.utilisateur.username }}</p>
-        <p><strong>Date de réservation :</strong> {{ billet.date_reservation|date:"d/m/Y H:i" }}</p>
+    <div class="ticket-container">
+        <h1>Billet de Réservation</h1>
+
+        <div class="info-row"><span class="label">Match :</span><span class="value">{{ reservation.match }}</span></div>
+        <div class="info-row"><span class="label">Nom du spectateur :</span><span class="value">{{ reservation.spectateur.username }}</span></div>
+        <div class="info-row"><span class="label">Date de réservation :</span><span class="value">{{ reservation.date_reservation }}</span></div>
+        <div class="info-row"><span class="label">Nombre de billets :</span><span class="value">{{ reservation.nb_billets }}</span></div>
+        <div class="info-row"><span class="label">Catégorie :</span><span class="value">{{ reservation.categorie }}</span></div>
+        <div class="info-row"><span class="label">Statut du billet :</span><span class="value">{{ billet.statut }}</span></div>
+
+        <hr>
+
+        <div class="footer">
+            Merci pour votre réservation. Veuillez présenter ce billet à l'entrée du match.
+        </div>
     </div>
 </body>
 </html>

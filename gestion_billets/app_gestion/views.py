@@ -6,16 +6,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from .models import Match, Reservation, Billet
-from .forms import CustomUserCreationForm, MatchForm,ReservationForm
+from .forms import CustomUserCreationForm, MatchForm,ReservationForm, UserProfileForm
 from django.contrib import messages
 from decimal import Decimal
 import stripe
 from django.conf import settings
 from django.utils import timezone
-from weasyprint import HTML
+from django.db.models import Q
+from django import forms
 from .models import Billet
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from xhtml2pdf import pisa
+import io
 
 
 
@@ -63,8 +66,17 @@ def home(request):
 # --- Matchs ---
 
 def liste_matchs(request):
-    matchs = Match.objects.all().order_by('date')
+    query = request.GET.get('q', '')  
+
+    if query:
+        matchs = Match.objects.filter(
+            Q(equipe1__nom__icontains=query) | Q(equipe2__nom__icontains=query)
+        ).order_by('date')
+    else:
+        matchs = Match.objects.all().order_by('date')
+
     return render(request, 'matchs/list.html', {'matchs': matchs})
+
 
 @login_required
 def detail_match(request, match_id):
@@ -104,6 +116,11 @@ def confirmer_reservation(request, match_id):
             messages.error(request, "Le nombre de billets doit être un entier positif.")
             return render(request, 'reservations/confirm.html', {'match': match})
 
+        # **Nouvelle vérification des places disponibles**
+        if nb_billets > match.nb_places_dispo:
+            messages.error(request, f"Désolé, il ne reste que {match.nb_places_dispo} places disponibles pour ce match.")
+            return render(request, 'reservations/confirm.html', {'match': match})
+
         # Calcul du montant selon la catégorie
         prix = match.prix_vip if categorie == 'VIP' else match.prix_standard
         montant = nb_billets * prix
@@ -129,8 +146,8 @@ def confirmer_reservation(request, match_id):
         # Rediriger vers le paiement Stripe
         return redirect('paiement', reservation_id=reservation.id)
 
-
     return render(request, 'reservations/confirm.html', {'match': match})
+
 
 @login_required
 
@@ -225,6 +242,7 @@ def paiement_success(request):
 
     return render(request, "paiement/success.html", {'reservation': reservation})
 
+
 @login_required
 def paiement_cancel(request):
     return render(request, "paiement/cancel.html")
@@ -296,20 +314,7 @@ def reservation_supprimer(request, reservation_id):
     # Si GET, on peut soit rediriger, soit afficher une confirmation (optionnel)
     return redirect('reservation_detail', reservation_id=reservation.id)
 
-def billet_pdf(request, billet_id):
-    billet = Billet.objects.get(id=billet_id)
 
-    # Rendu du template HTML en string
-    html_string = render_to_string('ticket_pdf.html', {'billet': billet})
-
-    # Génération du PDF depuis le HTML
-    pdf_file = HTML(string=html_string).write_pdf()
-
-    # Création de la réponse HTTP avec le PDF à télécharger
-    response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=billet_match_{billet.id}.pdf'
-
-    return response
 def modifier_match(request, match_id):
     match = get_object_or_404(Match, id=match_id)
     if request.method == 'POST':
@@ -323,9 +328,57 @@ def modifier_match(request, match_id):
     return render(request, 'matchs/modifier.html', {'form': form, 'match': match})
 
 
+@login_required
 def supprimer_match(request, match_id):
     match = get_object_or_404(Match, id=match_id)
+
     if request.method == 'POST':
         match.delete()
-        return redirect('liste_matchs_organisateur')  # page liste des matchs de l’organisateur
-    return render(request, 'matchs/supprimer.html', {'match': match})
+        return redirect('liste_matchs') 
+
+
+    return redirect('detail_match', match_id=match.id)
+
+@login_required
+def billet_pdf(request, billet_id):
+    billet = get_object_or_404(Billet, id=billet_id)
+    reservation = billet.reservation
+
+    if reservation.spectateur != request.user:
+        return HttpResponse("Accès non autorisé", status=403)
+
+    html = render_to_string('reservations/ticket_pdf.html', {'billet': billet, 'reservation': reservation})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="billet_{billet.id}.pdf"'
+
+    pisa_status = pisa.CreatePDF(io.StringIO(html), dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la génération du PDF", status=500)
+    return response
+
+
+from django.contrib.auth import update_session_auth_hash
+
+@login_required
+def profil(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            new_password = form.cleaned_data.get('password1')
+            if new_password:
+                user.set_password(new_password)
+            user.save()
+            # Pour éviter la déconnexion immédiate après changement mdp
+            if new_password:
+                update_session_auth_hash(request, user)
+            messages.success(request, "Profil mis à jour avec succès.")
+            return redirect('profil')
+    else:
+        form = UserProfileForm(instance=user)
+
+    return render(request, 'profil.html', {'form': form})

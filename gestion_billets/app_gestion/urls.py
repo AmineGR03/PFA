@@ -23,6 +23,7 @@ from .views import (
     billet_pdf,
     modifier_match,
     supprimer_match,
+    profil
 )
 
 urlpatterns = [
@@ -51,8 +52,9 @@ urlpatterns = [
 
     # Payer avec Stripe
     path('reservation/<int:reservation_id>/payer/', reservation_payer, name='reservation_payer'),
-    # PDF
+
     path('billet/<int:billet_id>/pdf/', billet_pdf, name='billet_pdf'),
+
 
     # Modifier la réservation
     path('reservation/<int:reservation_id>/modifier/', reservation_modifier, name='reservation_modifier'),
@@ -64,4 +66,11 @@ urlpatterns = [
 
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('signup/', signup, name='signup'),
+
+
+
+
+    path('profil/', profil, name='profil'),
+
+
 ]

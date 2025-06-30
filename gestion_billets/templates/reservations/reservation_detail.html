@@ -10,12 +10,34 @@
     <div class="card-body">
       <p><strong>Match :</strong> {{ reservation.match.equipe1.nom }} vs {{ reservation.match.equipe2.nom }}</p>
       <p><strong>Date :</strong> {{ reservation.match.date }}</p>
+      <p><strong>Heure :</strong> {{ reservation.match.heure }}</p>
       <p><strong>Catégorie :</strong> {{ reservation.categorie }}</p>
       <p><strong>Nombre de billets :</strong> {{ reservation.nb_billets }}</p>
       <p><strong>Statut :</strong> {{ reservation.statut }}</p>
       <p><strong>Montant :</strong> {{ reservation.montant }} DH</p>
     </div>
   </div>
+
+  {% if reservation.statut == "confirmée" %}
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Billets disponibles</h5>
+        {% for billet in reservation.billet_set.all %}
+          <p>Billet #{{ billet.id }} -
+            {% if billet.statut == "payé" %}
+              <a href="{% url 'billet_pdf' billet.id %}" class="btn btn-sm btn-outline-success">
+                Télécharger PDF
+              </a>
+            {% else %}
+              <span class="text-muted">Non payé</span>
+            {% endif %}
+          </p>
+        {% empty %}
+          <p class="text-muted">Aucun billet associé.</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
   <div class="d-flex gap-2">
     <a href="{% url 'reservation_modifier' reservation.id %}" class="btn btn-outline-primary">
